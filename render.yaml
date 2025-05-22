@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: uniswap-dashboard
+    env: python
+    region: oregon  # or frankfurt, ohio, etc.
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: GRAPH_API_KEY
+        value: 868e165c2d9e8541a21e3a5d4de4caa3
+      - key: SUBGRAPH_ID
+        value: 5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV
