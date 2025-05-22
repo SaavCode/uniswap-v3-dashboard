@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+venv/
+.env
+.env.*
+
+# macOS system files
+.DS_Store
+
+# Flask-related
+instance/
+*.db
+*.sqlite3
+
+# Log files
+*.log
+
+# VSCode / IDE files
+.vscode/
+.idea/
+
+# Node (if using npm for frontend)
+node_modules/
+
+# Render / deployment artifacts
+*.bak
+*.cache
+*.pid
+
+# Python environment files
+*.egg-info/
+.eggs/
+pip-log.txt
+
+# Static builds (optional)
+dist/
+build/
+*.zip
