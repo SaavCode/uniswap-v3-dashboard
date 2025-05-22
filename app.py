@@ -1,3 +1,4 @@
+import os
 import requests
 from flask import Flask, render_template, jsonify
 from utils.fetch import fetch_graph_data
@@ -33,7 +34,7 @@ def pool_history():
     try:
         data = fetch_graph_data(POOL_DAILY_QUERY)
         daily = data.get("poolDayDatas", [])
-        daily.reverse()  # Put in chronological order
+        daily.reverse()  # chronological order
 
         labels = [d["date"] for d in daily]
         tvl = [float(d["tvlUSD"]) for d in daily]
@@ -47,7 +48,7 @@ def pool_history():
     except Exception as e:
         print("❌ Chart API error:", e)
         return jsonify({"labels": [], "tvl": [], "volume": []})
-    
+
 @app.route("/api/top-pools-tvl")
 def top_pools_tvl():
     try:
@@ -60,6 +61,6 @@ def top_pools_tvl():
         print("❌ Bar chart API error:", e)
         return jsonify({"labels": [], "tvls": []})
 
-
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
