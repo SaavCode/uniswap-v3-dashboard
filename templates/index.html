@@ -148,20 +148,225 @@
     margin-bottom: 6px;
     font-size: 0.95rem;
   }
+
+  /* API Docs Dropdown Styles */
+details.api-docs {
+  background-color: #16191d;
+  border-left: 4px solid #ff007a;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #ccc;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+details.api-docs summary.api-toggle {
+  cursor: pointer;
+  font-weight: 600;
+  color: #ff61d8;
+  font-size: 1rem;
+  outline: none;
+  transition: color 0.3s ease;
+}
+
+details.api-docs summary.api-toggle:hover {
+  color: #ff8ddf;
+}
+
+details.api-docs[open] summary.api-toggle {
+  margin-bottom: 1rem;
+}
+
+.api-docs pre {
+  background-color: #0e0f11;
+  color: #e6e6e6;
+  padding: 0.75rem;
+  overflow-x: auto;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.api-docs code {
+  color: #d0d0d0;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.converter-section {
+  margin-bottom: 60px; /* or try 80px if you want more space */
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1b1e22;
+  padding: 12px 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 0 10px rgba(255, 0, 122, 0.2);
+  position: relative;
+}
+
+.app-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px solid #ff007a;
+}
+
+.navbar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ff007a;
+  font-weight: 600;
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  background-color: #ff007a;
+  color: white;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.dropbtn:hover {
+  background-color: #e60070;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #1b1e22;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  border-radius: 8px;
+}
+
+.dropdown-content a {
+  color: #e6e6e6;
+  padding: 10px 16px;
+  text-decoration: none;
+  display: block;
+  transition: background 0.2s ease;
+}
+
+.dropdown-content a:hover {
+  background-color: #292c31;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.api-content code {
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+  display: block;
+  overflow-wrap: break-word;
+}
+
+.api-content pre {
+  max-width: 100%;
+  overflow-x: auto;
+  background-color: #111;
+  padding: 12px;
+  border-radius: 8px;
+}
+
 </style>
 
 </head>
 <body>
-  <div class="header-row">
-  <h1>Uniswap V3 Dashboard</h1>
+  <!-- Navbar -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="{{ url_for('static', filename='images/uniswap_logo_chart.png') }}" alt="App Logo" class="app-logo" />
+  </div>
+  <div class="navbar-center">
+    <span class="navbar-title"> V3 Dashboard </span>
+  </div>
+  <div class="navbar-right">
+    <div class="dropdown">
+      <button class="dropbtn">Menu ▾</button>
+      <div class="dropdown-content">
+        <a href="https://saavtec.com" target="_blank" rel="noopener noreferrer">👤 My Profile</a>
+        <a href="#charts">📊 Charts</a>
+        <a href="#pools">💧 Pools</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
+  <div class="header-row"><h1>Uniswap V3 Dashboard</h1></div>
+<div class="converter-section">  <!-- Added margin-bottom here -->
+  <h1>ETH → USDC Converter</h1>
   <div class="quote-box">
     <label for="ethInput">Live ETH → USDC</label><br />
     <input id="ethInput" type="number" step="0.01" placeholder="Enter ETH" />
     <button onclick="getQuote()">Get Quote</button>
     <p id="quoteResult"></p>
   </div>
+
+  <p class="text-muted small mt-3">
+    Price derived from <code>token0Price</code> in the ETH/USDC pool on Uniswap V3 via The Graph subgraph.
+  </p>
+
+  <details class="api-docs mt-3">
+    <summary class="api-toggle">API Example</summary>
+    <div class="api-content mt-2">
+      <p><strong>API Type:</strong> GraphQL via The Graph</p>
+      <p><strong>Endpoint:</strong>  
+        <code>https://gateway.thegraph.com/api/&lt;API_KEY&gt;/subgraphs/id/&lt;SUBGRAPH_ID&gt;</code>
+      </p>
+
+      <p><strong>Query:</strong> <code>pools</code> (filtered for the ETH/USDC pool address)</p>
+      <p><strong>Description:</strong> Retrieves the current ETH→USDC exchange rate using <code>token0Price</code> from the target pool.</p>
+
+      <p><strong>Parameters:</strong></p>
+      <ul class="small text-muted">
+        <li><code>where: { token0: "0xa0b8...USDC", token1: "0xC02a...WETH" }</code></li>
+      </ul>
+
+      <p><strong>Fields:</strong> <code>token0Price</code>, <code>token1Price</code>, <code>feeTier</code></p>
+
+      <pre><code>{
+  pools(where: {
+    token0: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",  // USDC
+    token1: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"   // WETH
+  }) {
+    token0Price
+    token1Price
+    feeTier
+  }
+}</code></pre>
+    </div>
+  </details>
 </div>
 
+
+
+<h1>Uniswap V3 Analytics Hub 🧪</h1>
 
 <div class="chart-grid">
   <div class="chart-card">
@@ -174,8 +379,67 @@
   </div>
 </div>
 
+<p class="text-muted small mt-3">
+  Powered by <strong>The Graph</strong> (Uniswap V3 Subgraph). Charts use <code>poolDayDatas</code> and <code>pools</code> queries.
+</p>
 
-<h1>Top 5 Pools by Volume</h1>
+<!-- Insert dropdown here -->
+
+<details class="api-docs mt-3">
+  <summary class="api-toggle">API Example</summary>
+  <div class="api-content mt-2">
+    <p><strong>API Type:</strong> GraphQL via The Graph</p>
+    <p><strong>Endpoint:</strong>  
+      <code>https://gateway.thegraph.com/api/&lt;API_KEY&gt;/subgraphs/id/&lt;SUBGRAPH_ID&gt;</code>
+    </p>
+
+    <p><strong>Queries Used:</strong></p>
+    <ul class="small text-muted">
+      <li><code>poolDayDatas</code> – For the 7-day line chart (TVL & Volume history)</li>
+      <li><code>pools</code> – For the top 5 bar chart by TVL</li>
+    </ul>
+
+    <hr class="my-3" style="border-color: #333;">
+
+    <p class="mb-1"><strong>Line Chart: Historical TVL / Volume</strong></p>
+    <p>Retrieves the last 7 days of daily metrics for a specific pool (e.g., ETH/USDC).</p>
+    <ul class="small text-muted">
+      <li><code>first: 7</code> → return 7 records</li>
+      <li><code>orderBy: date</code> / <code>orderDirection: desc</code></li>
+      <li><code>where: { pool: "0x..." }</code> → filter to target pool</li>
+    </ul>
+    <pre><code>{
+  poolDayDatas(first: 7, orderBy: date, orderDirection: desc, where: {
+    pool: "0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8"
+  }) {
+    date
+    volumeUSD
+    tvlUSD
+  }
+}</code></pre>
+
+    <hr class="my-3" style="border-color: #333;">
+
+    <p class="mb-1"><strong>Bar Chart: Top Pools by TVL</strong></p>
+    <p>Returns the 5 most liquid pools by total value locked (TVL).</p>
+    <ul class="small text-muted">
+      <li><code>first: 5</code> → limit to top 5</li>
+      <li><code>orderBy: totalValueLockedUSD</code></li>
+      <li><code>orderDirection: desc</code></li>
+    </ul>
+    <pre><code>{
+  pools(first: 5, orderBy: totalValueLockedUSD, orderDirection: desc) {
+    id
+    token0 {{ symbol }}
+    token1 {{ symbol }}
+    totalValueLockedUSD
+  }
+}</code></pre>
+  </div>
+</details>
+
+
+<h1>Most Traded Pools on Uniswap V3 – All-Time Volume</h1>
 
 
   {% for pool in pools %}
@@ -207,6 +471,40 @@
     <div class="card">No pool data available.</div>
   {% endfor %}
 
+<p class="text-muted small mt-3">
+  Pulled from <strong>Uniswap V3 Subgraph</strong> using <code>pools</code> query with <code>orderBy: volumeUSD</code> and <code>first: 5</code>.
+</p>
+<details class="api-docs mt-3">
+  <summary class="api-toggle">API Example</summary>
+  <div class="api-content mt-2">
+    <p><strong>API Type:</strong> GraphQL via The Graph</p>
+    <p><strong>Endpoint:</strong>  
+      <code>https://gateway.thegraph.com/api/&lt;API_KEY&gt;/subgraphs/id/&lt;SUBGRAPH_ID&gt;</code>
+    </p>
+
+    <p><strong>Query:</strong> <code>pools</code></p>
+    <p><strong>Description:</strong> Retrieves a list of the most active liquidity pools on Uniswap V3.</p>
+
+    <p><strong>Parameters:</strong></p>
+    <ul class="small text-muted">
+      <li><code>first: 5</code> → return the top 5 pools</li>
+      <li><code>orderBy: volumeUSD</code></li>
+      <li><code>orderDirection: desc</code></li>
+    </ul>
+
+    <p><strong>Fields:</strong> <code>id</code>, <code>token0</code>, <code>token1</code>, <code>volumeUSD</code>, <code>totalValueLockedUSD</code></p>
+
+    <pre><code>{
+  pools(first: 5, orderBy: volumeUSD, orderDirection: desc) {
+    id
+    token0 { symbol id }
+    token1 { symbol id }
+    volumeUSD
+    totalValueLockedUSD
+  }
+}</code></pre>
+  </div>
+</details>
 
 <script>
   async function getQuote() {
